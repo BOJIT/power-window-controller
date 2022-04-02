@@ -49,33 +49,20 @@ void WindowController::DoState(void)
     state_t target_state = ReadSwitch();
     uint32_t t_now = millis();
 
-    switch(m_state) {
-        case(STATE_STOPPED):
-            // Change to opening or closing state if switch pressed
-            if(target_state != m_state)
-                ToState(target_state);
+    // Check if at end of travel
+    if((t_now - m_state_ts > CURRENT_DEBOUNCE) && AtTravelLimit())
+        ToState(STATE_STOPPED);
 
-            break;
-
-        case(STATE_OPENING):
-        case(STATE_CLOSING):
-            // Check if at end of travel
-            if((t_now - m_state_ts > CURRENT_DEBOUNCE) && AtTravelLimit())
-                ToState(STATE_STOPPED);
-
-            // Change state, unless in auto mode (return to stop in window)
-            if(!m_auto_lockout && (target_state != m_state)) {
-                if(target_state == STATE_STOPPED) {
-                    if((t_now > HOLD_START) && (t_now < HOLD_STOP)) {
-                        m_auto_lockout = true;
-                        break;
-                    }
-                }
-
-                ToState(target_state);
+    // Change state, unless in auto mode (return to stop in window)
+    if(!m_auto_lockout && (target_state != m_state)) {
+        if(target_state == STATE_STOPPED) {
+            if((t_now > HOLD_START) && (t_now < HOLD_STOP)) {
+                m_auto_lockout = true;
+                return;
             }
+        }
 
-            break;
+        ToState(target_state);
     }
 }
 
