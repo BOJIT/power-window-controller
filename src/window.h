@@ -41,6 +41,7 @@ class WindowController
         static constexpr uint32_t HOLD_STOP = 2000;
         static constexpr uint32_t SWITCH_DEBOUNCE = 100;
         static constexpr uint32_t CURRENT_DEBOUNCE = 100;
+        static constexpr uint32_t FAILURE_TIME = 10000;
 
         typedef enum {
             STATE_STOPPED,

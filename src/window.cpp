@@ -64,6 +64,10 @@ void WindowController::DoState(void)
 
         ToState(target_state);
     }
+
+    // If have been moving for more than 10 seconds, assume failed current sensor
+    if((t_now - m_state_ts) > FAILURE_TIME)
+        ToState(STATE_STOPPED);
 }
 
 
