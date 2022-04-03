@@ -30,14 +30,14 @@
 #define RIGHT_BTN_UP            PA5
 
 #define BAUD_RATE               115200
-#define PROCESS_RATE            10
+#define PROCESS_RATE            200
 
 /*-------------------------------- Constants ---------------------------------*/
 
 HardwareSerial debug(PB7, PB6);
 
-WindowController leftWindow;
-WindowController rightWindow;
+static WindowController leftWindow;
+static WindowController rightWindow;
 
 /*------------------------------- Entry Point --------------------------------*/
 
@@ -45,6 +45,8 @@ WindowController rightWindow;
 void setup(void)
 {
     debug.begin(BAUD_RATE);
+
+    debug.println("Begin DEBUG");
 
     WindowController::pinmap_t l_pins = {
         LEFT_CURRENT,
@@ -69,12 +71,12 @@ void setup(void)
 
 void loop(void)
 {
-    uint32_t t_prev;
+    static uint32_t t_prev = 0;
     uint32_t t_now = millis();
 
     if((t_now - t_prev) > PROCESS_RATE) {
         leftWindow.DoState();
-        leftWindow.DoState();
+        rightWindow.DoState();
 
         t_prev = t_now;
     }

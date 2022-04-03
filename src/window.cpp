@@ -15,6 +15,8 @@
 
 #include <Arduino.h>
 
+extern HardwareSerial debug;
+
 /*----------------------------- Public Methods -------------------------------*/
 
 
@@ -108,6 +110,7 @@ void WindowController::ToState(state_t state)
  */
 void WindowController::Stop(void)
 {
+    debug.printf("%p - STOP\n", this);
     digitalWrite(m_pinmap.fet_down, LOW);
     digitalWrite(m_pinmap.fet_up, LOW);
 }
@@ -118,6 +121,7 @@ void WindowController::Stop(void)
  */
 void WindowController::Open(void)
 {
+    debug.printf("%p - OPEN\n", this);
     digitalWrite(m_pinmap.fet_down, HIGH);
     digitalWrite(m_pinmap.fet_up, LOW);
 }
@@ -128,6 +132,7 @@ void WindowController::Open(void)
  */
 void WindowController::Close(void)
 {
+    debug.printf("%p - CLOSE\n", this);
     digitalWrite(m_pinmap.fet_down, LOW);
     digitalWrite(m_pinmap.fet_up, HIGH);
 }
@@ -143,16 +148,16 @@ WindowController::state_t WindowController::ReadSwitch(void)
     state_t target_state = STATE_STOPPED;
     uint32_t ts_now = millis();
 
-    // Lockout means that the switch-state has to return to stopped to clear
-    if(m_switch_lockout)
-        return STATE_STOPPED;
-
     if(digitalRead(m_pinmap.btn_down) == LOW)
         target_state = STATE_OPENING;
-    else if(digitalRead(m_pinmap.btn_up)== LOW)
+    else if(digitalRead(m_pinmap.btn_up) == LOW)
         target_state = STATE_CLOSING;
     else
         m_switch_lockout = false;
+
+    // Lockout means that the switch-state has to return to stopped to clear
+    if(m_switch_lockout)
+        return STATE_STOPPED;
 
     if((m_switch_prev_state != target_state) && (ts_now - m_switch_ts) > SWITCH_DEBOUNCE) {
         m_switch_prev_state = target_state;
@@ -173,6 +178,7 @@ WindowController::state_t WindowController::ReadSwitch(void)
 bool WindowController::AtTravelLimit(void)
 {
     m_current = analogRead(m_pinmap.current);
+    return false;
 
     if(m_current > m_stall_threshold)
         return true;

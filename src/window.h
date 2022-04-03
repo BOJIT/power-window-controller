@@ -56,8 +56,8 @@ class WindowController
         state_t m_switch_prev_state = STATE_STOPPED;
         uint32_t m_switch_ts = 0;
 
-        uint32_t m_switch_lockout = false;
-        uint32_t m_auto_lockout = false;
+        bool m_switch_lockout = false;
+        bool m_auto_lockout = false;
 
         void ToState(state_t state);
 
