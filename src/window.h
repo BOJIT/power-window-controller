@@ -30,18 +30,18 @@ class WindowController
         } pinmap_t;
 
         uint16_t m_current;
-        uint16_t m_stall_threshold;
+        uint16_t m_max_count = 0;
 
-        void Init(pinmap_t* pinmap, uint16_t stall_threshold);
+        void Init(pinmap_t* pinmap);
         void DoState(void);
 
     private:
         /* Config */
-        static constexpr uint32_t HOLD_START = 1000;
-        static constexpr uint32_t HOLD_STOP = 2000;
+        static constexpr uint32_t HOLD_START = 700;
+        static constexpr uint32_t HOLD_STOP = 1500;
         static constexpr uint32_t SWITCH_DEBOUNCE = 100;
         static constexpr uint32_t CURRENT_DEBOUNCE = 100;
-        static constexpr uint32_t FAILURE_TIME = 10000;
+        static constexpr uint32_t FAILURE_TIME = 5000;
 
         typedef enum {
             STATE_STOPPED,

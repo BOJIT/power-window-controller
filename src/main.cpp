@@ -62,9 +62,8 @@ void setup(void)
         RIGHT_BTN_UP
     };
 
-    // Initialise with stall thresholds - 0A = 784
-    leftWindow.Init(&l_pins, 820);
-    rightWindow.Init(&r_pins, 820);
+    leftWindow.Init(&l_pins);
+    rightWindow.Init(&r_pins);
 }
 
 

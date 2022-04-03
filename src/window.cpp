@@ -24,12 +24,10 @@ extern HardwareSerial debug;
  * @brief Initialise power window controller
  *
  * @param pinmap Pin names for each window controller
- * @param stall_threshold Current at which window stops moving
  */
-void WindowController::Init(pinmap_t* pinmap, uint16_t stall_threshold)
+void WindowController::Init(pinmap_t* pinmap)
 {
     m_pinmap = *pinmap;
-    m_stall_threshold = stall_threshold;
 
     pinMode(m_pinmap.current, INPUT_ANALOG);
 
@@ -179,7 +177,13 @@ bool WindowController::AtTravelLimit(void)
 {
     m_current = analogRead(m_pinmap.current);
 
-    if(m_current > m_stall_threshold)
+    if(m_current == 1023)
+        m_max_count++;
+    else
+        m_max_count = 0;
+
+    // If ADC maxxed out for more than 3 samples, cut power
+    if(m_max_count > 3)
         return true;
     else
         return false;
