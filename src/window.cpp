@@ -58,7 +58,7 @@ void WindowController::DoState(void)
     // Change state, unless in auto mode (return to stop in window)
     if(!m_auto_lockout && (target_state != m_state)) {
         if(target_state == STATE_STOPPED) {
-            if((t_now > HOLD_START) && (t_now < HOLD_STOP)) {
+            if(((t_now - m_state_ts) > HOLD_START) && ((t_now - m_state_ts) < HOLD_STOP)) {
                 m_auto_lockout = true;
                 return;
             }
@@ -68,7 +68,7 @@ void WindowController::DoState(void)
     }
 
     // If have been moving for more than 10 seconds, assume failed current sensor
-    if((t_now - m_state_ts) > FAILURE_TIME)
+    if((m_state != STATE_STOPPED) && ((t_now - m_state_ts) > FAILURE_TIME))
         ToState(STATE_STOPPED);
 }
 
@@ -178,7 +178,6 @@ WindowController::state_t WindowController::ReadSwitch(void)
 bool WindowController::AtTravelLimit(void)
 {
     m_current = analogRead(m_pinmap.current);
-    return false;
 
     if(m_current > m_stall_threshold)
         return true;

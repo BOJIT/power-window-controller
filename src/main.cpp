@@ -30,7 +30,7 @@
 #define RIGHT_BTN_UP            PA5
 
 #define BAUD_RATE               115200
-#define PROCESS_RATE            200
+#define PROCESS_RATE            50
 
 /*-------------------------------- Constants ---------------------------------*/
 
@@ -45,8 +45,6 @@ static WindowController rightWindow;
 void setup(void)
 {
     debug.begin(BAUD_RATE);
-
-    debug.println("Begin DEBUG");
 
     WindowController::pinmap_t l_pins = {
         LEFT_CURRENT,
@@ -64,8 +62,9 @@ void setup(void)
         RIGHT_BTN_UP
     };
 
-    leftWindow.Init(&l_pins, 500);
-    rightWindow.Init(&r_pins, 500);
+    // Initialise with stall thresholds - 0A = 784
+    leftWindow.Init(&l_pins, 820);
+    rightWindow.Init(&r_pins, 820);
 }
 
 
@@ -77,6 +76,8 @@ void loop(void)
     if((t_now - t_prev) > PROCESS_RATE) {
         leftWindow.DoState();
         rightWindow.DoState();
+
+        debug.printf("%u, %u\n", leftWindow.m_current, rightWindow.m_current);
 
         t_prev = t_now;
     }
