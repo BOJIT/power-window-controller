@@ -46,28 +46,35 @@ void WindowController::Init(pinmap_t* pinmap)
  */
 void WindowController::DoState(void)
 {
-    state_t target_state = ReadSwitch();
+    // Work out target state at current time
     uint32_t t_now = millis();
+    state_t target_state = ReadSwitch();
 
     // Check if at end of travel
     if((t_now - m_state_ts > CURRENT_DEBOUNCE) && AtTravelLimit())
         ToState(STATE_STOPPED);
 
-    // Change state, unless in auto mode (return to stop in window)
-    if(!m_auto_lockout && (target_state != m_state)) {
-        if(target_state == STATE_STOPPED) {
-            if(((t_now - m_state_ts) > HOLD_START) && ((t_now - m_state_ts) < HOLD_STOP)) {
-                m_auto_lockout = true;
-                return;
-            }
-        }
-
-        ToState(target_state);
-    }
-
     // If have been moving for more than 10 seconds, assume failed current sensor
     if((m_state != STATE_STOPPED) && ((t_now - m_state_ts) > FAILURE_TIME))
         ToState(STATE_STOPPED);
+
+    // Handle auto-lockout state
+    if(m_auto_lockout) {
+        if((t_now - m_state_ts) > HOLD_STOP)
+            m_auto_lockout = false;
+    } else {
+        if((t_now - m_state_ts) > HOLD_START)
+            m_auto_lockout = true;
+    }
+
+    if(target_state != m_state) {
+        // Reject state change if in auto-mode
+        if(m_auto_lockout && (target_state == STATE_STOPPED))
+            return;
+
+        // go to switch state
+        ToState(target_state);
+    }
 }
 
 
@@ -177,13 +184,13 @@ bool WindowController::AtTravelLimit(void)
 {
     m_current = analogRead(m_pinmap.current);
 
-    if(m_current == 1023)
-        m_max_count++;
+    if(m_current >= CURRENT_THRESHOLD)
+        m_consecutive_samples++;
     else
-        m_max_count = 0;
+        m_consecutive_samples = 0;
 
-    // If ADC maxxed out for more than 3 samples, cut power
-    if(m_max_count > 3)
+    // If ADC exceeds threshold for more than 3 samples, cut power
+    if(m_consecutive_samples > 3)
         return true;
     else
         return false;

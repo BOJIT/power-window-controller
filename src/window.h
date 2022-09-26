@@ -30,16 +30,17 @@ class WindowController
         } pinmap_t;
 
         uint16_t m_current;
-        uint16_t m_max_count = 0;
+        uint16_t m_consecutive_samples = 0;
 
         void Init(pinmap_t* pinmap);
         void DoState(void);
 
     private:
         /* Config */
-        static constexpr uint32_t HOLD_START = 700;
-        static constexpr uint32_t HOLD_STOP = 1500;
+        static constexpr uint32_t HOLD_START = 600;
+        static constexpr uint32_t HOLD_STOP = 1400;
         static constexpr uint32_t SWITCH_DEBOUNCE = 100;
+        static constexpr uint32_t CURRENT_THRESHOLD = 1000;
         static constexpr uint32_t CURRENT_DEBOUNCE = 100;
         static constexpr uint32_t FAILURE_TIME = 5000;
 
