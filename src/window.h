@@ -40,7 +40,7 @@ class WindowController
         static constexpr uint32_t HOLD_START = 600;
         static constexpr uint32_t HOLD_STOP = 1400;
         static constexpr uint32_t SWITCH_DEBOUNCE = 100;
-        static constexpr uint32_t CURRENT_THRESHOLD = 1000;
+        static constexpr uint32_t CURRENT_THRESHOLD = 700;
         static constexpr uint32_t CURRENT_DEBOUNCE = 100;
         static constexpr uint32_t FAILURE_TIME = 5000;
 

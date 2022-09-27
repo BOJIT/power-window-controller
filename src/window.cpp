@@ -51,15 +51,19 @@ void WindowController::DoState(void)
     state_t target_state = ReadSwitch();
 
     // Check if at end of travel
-    if((t_now - m_state_ts > CURRENT_DEBOUNCE) && AtTravelLimit())
+    if((t_now - m_state_ts > CURRENT_DEBOUNCE) && AtTravelLimit()){
+        debug.println("Limit");
         ToState(STATE_STOPPED);
+    }
 
     // If have been moving for more than 10 seconds, assume failed current sensor
-    if((m_state != STATE_STOPPED) && ((t_now - m_state_ts) > FAILURE_TIME))
+    if((m_state != STATE_STOPPED) && ((t_now - m_state_ts) > FAILURE_TIME)) {
+        debug.println("FAIL");
         ToState(STATE_STOPPED);
+    }
 
     // Handle auto-lockout state
-    if(m_auto_lockout) {
+    if(m_auto_lockout && (target_state != STATE_STOPPED)) {
         if((t_now - m_state_ts) > HOLD_STOP)
             m_auto_lockout = false;
     } else {
@@ -73,6 +77,7 @@ void WindowController::DoState(void)
             return;
 
         // go to switch state
+        m_auto_lockout = false;
         ToState(target_state);
     }
 }
