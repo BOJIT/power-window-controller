@@ -27,7 +27,9 @@ public:
     /**
      * @brief Add dependent task: The task here will not initialise until
      * all depdencies have initialised
-     * @param t
+     * @note THREAD-SAFE!
+     *
+     * @param t Pointer to dependency thread
      * @return true - if added successully
      * @return false - if MAX_DEPS has been exceeded!
      */
