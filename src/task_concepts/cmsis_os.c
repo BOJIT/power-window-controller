@@ -12,15 +12,24 @@
 
 #include "cmsis_os.h"
 
-/*---------------------------- Macros & Constants ----------------------------*/
-
-/*----------------------------------- State ----------------------------------*/
-
-/*------------------------------ Private Functions ---------------------------*/
-
 /*------------------------------- Public Functions ---------------------------*/
 
-void osSetFlag(osThreadId_t t, uint32_t flag, uint32_t timeout)
+void osThreadFlagsSet(osThreadId_t t, uint32_t flags)
+{
+
+}
+
+osEventFlagsId_t osEventFlagsNew(const osEventFlagsAttr_t *attr)
+{
+
+}
+
+uint32_t osEventFlagsSet(osEventFlagsId_t ef_id, uint32_t flags)
+{
+
+}
+
+uint32_t osEventFlagsWait(osEventFlagsId_t ef_id, uint32_t flags, uint32_t options, uint32_t timeout)
 {
 
 }
