@@ -15,6 +15,9 @@
 
 #include "window.h"
 
+#include "task_concepts/Threads/Network.h"
+#include "task_concepts/Threads/Shell.h"
+
 /*--------------------------------- Macros -----------------------------------*/
 
 #define LEFT_CURRENT            PA1
@@ -39,11 +42,17 @@ HardwareSerial debug(PB7, PB6);
 static WindowController leftWindow;
 static WindowController rightWindow;
 
+static THREAD::Network m_networkThread;
+static THREAD::Shell m_shellThread;
+
 /*------------------------------- Entry Point --------------------------------*/
 
 
 void setup(void)
 {
+    m_networkThread.Register("Network Instance", 5);
+    m_shellThread.Register("Shell Instance", 5);
+
     debug.begin(BAUD_RATE);
 
     WindowController::pinmap_t l_pins = {

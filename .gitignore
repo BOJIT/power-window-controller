@@ -1,2 +1,4 @@
 .vscode/*
 .pio
+.vscode/settings.json
+.vscode/cpp.code-snippets
