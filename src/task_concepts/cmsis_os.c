@@ -20,11 +20,6 @@
 
 /*------------------------------- Public Functions ---------------------------*/
 
-osThreadId_t osRegisterThread(osThreadAttr_t *t, void(*fn)(void *))
-{
-    return NULL;
-}
-
 void osSetFlag(osThreadId_t t, uint32_t flag, uint32_t timeout)
 {
 
@@ -35,7 +30,12 @@ void osDelay(uint32_t d)
 
 }
 
-void osThreadTerminate(osThreadId_t t)
+osThreadId_t osThreadNew(osThreadFunc_t func, void *arg, const osThreadAttr_t *attr)
+{
+
+}
+
+void osThreadExit(void)
 {
 
 }

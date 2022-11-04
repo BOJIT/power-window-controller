@@ -22,9 +22,19 @@
 typedef struct {
     uint32_t val1;
     uint32_t val2;
+} StaticTask_t;
+typedef uint32_t osPriority_t;
+typedef struct {
+    const char *name;
+    void *cb_mem;
+    uint32_t cb_size;
+    void *stack_mem;
+    uint32_t stack_size;
+    osPriority_t priority;
 } osThreadAttr_t;
 typedef void* osThreadId_t;
-typedef uint32_t osThreadPriority_t;
+typedef void ( *osThreadFunc_t)(void *argument);
+
 
 /*--------------------------------- Functions --------------------------------*/
 
@@ -32,10 +42,10 @@ typedef uint32_t osThreadPriority_t;
 extern "C" {
 #endif /* __cplusplus */
 
-osThreadId_t osRegisterThread(osThreadAttr_t *t, void(*fn)(void *));
 void osSetFlag(osThreadId_t t, uint32_t flag, uint32_t timeout);
 void osDelay(uint32_t d);
-void osThreadTerminate(osThreadId_t t);
+osThreadId_t osThreadNew(osThreadFunc_t func, void *arg, const osThreadAttr_t *attr);
+void osThreadExit(void);
 
 #ifdef __cplusplus
 }
