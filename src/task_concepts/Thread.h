@@ -16,7 +16,7 @@
 
 #include "cmsis_os.h"
 
-/*------------------------------- Primary Class ------------------------------*/
+/*-------------------------------- Base Thread -------------------------------*/
 
 namespace OS {
 
@@ -43,6 +43,7 @@ class BaseThread
 
     static constexpr size_t MAX_DEPS = 5;   ///< Max number of tasks to wait on (plenty)
     OS::BaseThread *m_deps[MAX_DEPS];       ///< Array of dependencies to check
+
     size_t m_deps_count = 0;                ///< Depth of array
 
     void CheckDependencies(void);
@@ -79,8 +80,21 @@ class Thread: public BaseThread
 
     void Init(void) {}
 
-   protected:
+   private:
     uint8_t m_stack[stack];
+
+    // Make protected members private to thread implementations
+    using BaseThread::m_attr;
+    using BaseThread::m_cb;
+    using BaseThread::m_evt_attr;
+    using BaseThread::m_evt_cb;
+    using BaseThread::m_evt_handle;
+    using BaseThread::READY_FLAG;
+    using BaseThread::MAX_DEPS;
+    using BaseThread::m_deps;
+    using BaseThread::m_deps_count;
+    using BaseThread::CheckDependencies;
+    using BaseThread::global_entry;
 };
 
 } /* namespace OS */
