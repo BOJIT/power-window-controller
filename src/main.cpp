@@ -53,6 +53,8 @@ void setup(void)
     m_networkThread.Register("Network Instance", 5);
     m_shellThread.Register("Shell Instance", 5);
 
+    m_shellThread.AddDependency(&m_networkThread);
+
     debug.begin(BAUD_RATE);
 
     WindowController::pinmap_t l_pins = {

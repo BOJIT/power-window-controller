@@ -19,11 +19,12 @@
 
 namespace THREAD {
 
-class Shell : public Thread
+class Shell : public OS::Thread<512>
 {
 public:
 
 protected:
+    void Init(void);
     void Entry(void);
 };
 

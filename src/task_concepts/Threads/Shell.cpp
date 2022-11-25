@@ -15,6 +15,11 @@
 
 /*------------------------------- Private Methods ----------------------------*/
 
+void THREAD::Shell::Init(void)
+{
+
+}
+
 void THREAD::Shell::Entry(void)
 {
     for(;;)

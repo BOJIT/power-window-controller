@@ -10,7 +10,7 @@
 
 namespace THREAD {
 
-class Network : public Thread
+class Network : public OS::Thread<112>
 {
 public:
 
